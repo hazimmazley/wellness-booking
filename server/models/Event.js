@@ -16,9 +16,11 @@ const eventSchema = new mongoose.Schema(
       type: [Date],
       validate: {
         validator: function (dates) {
-          return dates.length === 3;
+          if (dates.length !== 3) return false;
+          const unique = new Set(dates.map(d => d.getTime()));
+          return unique.size === 3;
         },
-        message: "Exactly 3 proposed dates are required",
+        message: "Exactly 3 unique proposed dates are required",
       },
       required: [true, "Proposed dates are required"],
     },

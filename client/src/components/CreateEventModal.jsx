@@ -39,6 +39,10 @@ export default function CreateEventModal({ onClose, onCreate }) {
       setError("Please select all 3 proposed dates");
       return;
     }
+    if (date1 === date2 || date1 === date3 || date2 === date3) {
+      setError("All 3 proposed dates must be different");
+      return;
+    }
     if (!postalCode.trim()) {
       setError("Please enter a postal code");
       return;

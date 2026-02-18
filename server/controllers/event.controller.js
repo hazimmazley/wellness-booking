@@ -78,6 +78,11 @@ exports.createEvent = async (req, res) => {
         .json({ error: "Exactly 3 proposed dates are required" });
     }
 
+    const uniqueDates = new Set(proposedDates.map(d => new Date(d).getTime()));
+    if (uniqueDates.size !== 3) {
+      return res.status(400).json({ error: "All 3 proposed dates must be different" });
+    }
+
     // Validate event type exists and get the tagged vendor
     const eventType = await EventType.findById(eventTypeId).populate("vendor");
     if (!eventType) {
