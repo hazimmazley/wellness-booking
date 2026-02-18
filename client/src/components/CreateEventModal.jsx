@@ -156,12 +156,13 @@ export default function CreateEventModal({ onClose, onCreate }) {
           </div>
           <div style={styles.field}>
             <label style={styles.label}>Street Name (optional)</label>
-            <input
-              type="text"
+            <textarea
               value={streetName}
               onChange={(e) => setStreetName(e.target.value)}
-              style={styles.input}
-              placeholder="e.g. 1 Raffles Place"
+              style={{ ...styles.input, resize: "vertical", minHeight: "60px" }}
+              placeholder="e.g. 1 Jalan Bukit Bintang"
+              rows={3}
+              maxLength={200}
             />
           </div>
 

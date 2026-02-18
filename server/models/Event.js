@@ -33,6 +33,7 @@ const eventSchema = new mongoose.Schema(
       streetName: {
         type: String,
         trim: true,
+        maxlength: [200, "Street name cannot exceed 200 characters"],
         default: "",
       },
     },
