@@ -38,6 +38,15 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+app.get("/", (req, res) => {
+  res.json({
+    name: "Wellness Event Booking API",
+    status: "running",
+    health: "/api/health",
+    documentation: "https://github.com/hazimmazley/wellness-booking",
+  });
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
