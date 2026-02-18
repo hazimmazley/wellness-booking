@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../lib/api";
 import EventModal from "../components/EventModal";
 import CreateEventModal from "../components/CreateEventModal";
+import Notification from "../components/Notification";
 
 export default function Dashboard({ user, onLogout }) {
   const [events, setEvents] = useState([]);
@@ -9,6 +10,7 @@ export default function Dashboard({ user, onLogout }) {
   const [error, setError] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     async function fetchEvents() {
@@ -28,10 +30,16 @@ export default function Dashboard({ user, onLogout }) {
     setEvents((prev) =>
       prev.map((e) => (e._id === updatedEvent._id ? updatedEvent : e)),
     );
+    const action = updatedEvent.status === "approved" ? "approved" : "rejected";
+    setNotification({
+      message: `Event ${action} successfully`,
+      type: "success",
+    });
   }
 
   function handleEventCreated(newEvent) {
     setEvents((prev) => [newEvent, ...prev]);
+    setNotification({ message: "Event created successfully", type: "success" });
   }
 
   function formatDate(dateStr) {
@@ -51,6 +59,13 @@ export default function Dashboard({ user, onLogout }) {
 
   return (
     <div style={styles.page}>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       {/* Navigation */}
       <nav style={styles.nav}>
         <span style={styles.logo}>Wellness Booking</span>
