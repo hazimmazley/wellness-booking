@@ -8,6 +8,11 @@ A full-stack web application for online booking of wellness events (health talks
 - **Backend:** Node.js + Express
 - **Database:** MongoDB (Atlas)
 
+## Live Demo
+
+- **Frontend:** https://wellness-booking-client.onrender.com
+- **Backend API:** https://wellness-booking-api.onrender.com
+
 ---
 
 ## ER Diagram
