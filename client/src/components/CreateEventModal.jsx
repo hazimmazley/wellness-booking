@@ -43,8 +43,8 @@ export default function CreateEventModal({ onClose, onCreate }) {
       setError("All 3 proposed dates must be different");
       return;
     }
-    if (!postalCode.trim()) {
-      setError("Please enter a postal code");
+    if (!/^\d{5}$/.test(postalCode.trim())) {
+      setError("Postal code must be exactly 5 digits");
       return;
     }
 
@@ -145,10 +145,12 @@ export default function CreateEventModal({ onClose, onCreate }) {
             <label style={styles.label}>Postal Code *</label>
             <input
               type="text"
+              inputMode="numeric"
+              maxLength={5}
               value={postalCode}
-              onChange={(e) => setPostalCode(e.target.value)}
+              onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, ""))}
               style={styles.input}
-              placeholder="e.g. 123456"
+              placeholder="e.g. 50000"
               required
             />
           </div>

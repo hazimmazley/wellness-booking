@@ -101,8 +101,8 @@ exports.createEvent = async (req, res) => {
     }
 
     // Validate location
-    if (!location || !location.postalCode) {
-      return res.status(400).json({ error: "Postal code is required" });
+    if (!location || !location.postalCode || !/^\d{5}$/.test(location.postalCode)) {
+      return res.status(400).json({ error: "Postal code must be exactly 5 digits" });
     }
 
     // Create the event
