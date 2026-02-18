@@ -180,6 +180,17 @@ Enter username and password. The system detects your role (HR or Vendor) and sho
 
 ## Sample JSON Documents
 
+## Database Collections
+
+### Users Collection
+![Users Collection](screenshots/db-users.png)
+
+### Events Collection
+![Events Collection](screenshots/db-events.png)
+
+### EventTypes Collection
+![EventTypes Collection](screenshots/db-eventtypes.png)
+
 ### User
 ```json
 {
