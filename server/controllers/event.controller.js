@@ -15,13 +15,24 @@ exports.getEvents = async (req, res) => {
       query.vendor = req.user._id;
     }
 
-    const events = await Event.find(query)
-      .populate("eventType", "name description")
-      .populate("vendor", "companyName username")
-      .populate("createdBy", "companyName username")
-      .sort({ createdAt: -1 });
+    const page  = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 10));
+    const skip  = (page - 1) * limit;
 
-    res.json({ data: events });
+    const [events, totalEvents] = await Promise.all([
+      Event.find(query)
+        .populate("eventType", "name description")
+        .populate("vendor", "companyName username")
+        .populate("createdBy", "companyName username")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Event.countDocuments(query),
+    ]);
+
+    const totalPages = Math.ceil(totalEvents / limit);
+
+    res.json({ data: events, currentPage: page, totalPages, totalEvents });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

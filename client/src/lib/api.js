@@ -31,7 +31,13 @@ async function request(endpoint, options = {}) {
 }
 
 export const api = {
-  get: (endpoint) => request(endpoint),
+  get: (endpoint, params) => {
+    if (params && Object.keys(params).length > 0) {
+      const qs = new URLSearchParams(params).toString();
+      return request(`${endpoint}?${qs}`);
+    }
+    return request(endpoint);
+  },
   post: (endpoint, body) => request(endpoint, { method: "POST", body }),
   patch: (endpoint, body) => request(endpoint, { method: "PATCH", body }),
 };

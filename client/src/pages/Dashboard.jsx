@@ -11,12 +11,17 @@ export default function Dashboard({ user, onLogout }) {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [fetchTrigger, setFetchTrigger] = useState(0);
 
   useEffect(() => {
     async function fetchEvents() {
+      setLoading(true);
       try {
-        const { data } = await api.get("/events");
-        setEvents(data);
+        const res = await api.get("/events", { page: currentPage, limit: 10 });
+        setEvents(res.data);
+        setTotalPages(res.totalPages);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -24,7 +29,7 @@ export default function Dashboard({ user, onLogout }) {
       }
     }
     fetchEvents();
-  }, []);
+  }, [currentPage, fetchTrigger]);
 
   function handleEventUpdate(updatedEvent) {
     setEvents((prev) =>
@@ -37,8 +42,12 @@ export default function Dashboard({ user, onLogout }) {
     });
   }
 
-  function handleEventCreated(newEvent) {
-    setEvents((prev) => [newEvent, ...prev]);
+  function handleEventCreated() {
+    if (currentPage === 1) {
+      setFetchTrigger((t) => t + 1);
+    } else {
+      setCurrentPage(1);
+    }
     setNotification({ message: "Event created successfully", type: "success" });
   }
 
@@ -181,6 +190,34 @@ export default function Dashboard({ user, onLogout }) {
             </table>
           </div>
         )}
+
+        {totalPages > 1 && (
+          <div style={styles.pagination}>
+            <button
+              style={{
+                ...styles.pageBtn,
+                ...(currentPage <= 1 ? styles.pageBtnDisabled : {}),
+              }}
+              disabled={currentPage <= 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Previous
+            </button>
+            <span style={styles.pageInfo}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              style={{
+                ...styles.pageBtn,
+                ...(currentPage >= totalPages ? styles.pageBtnDisabled : {}),
+              }}
+              disabled={currentPage >= totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </main>
 
       {selectedEvent && (
@@ -291,5 +328,29 @@ const styles = {
     borderRadius: "6px",
     fontSize: "13px",
     cursor: "pointer",
+  },
+  pagination: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "12px",
+    marginTop: "16px",
+  },
+  pageBtn: {
+    padding: "6px 16px",
+    background: "#fff",
+    border: "1px solid #e2e8f0",
+    borderRadius: "6px",
+    fontSize: "13px",
+    color: "#334155",
+    cursor: "pointer",
+  },
+  pageBtnDisabled: {
+    opacity: 0.5,
+    cursor: "not-allowed",
+  },
+  pageInfo: {
+    fontSize: "13px",
+    color: "#64748b",
   },
 };
