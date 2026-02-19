@@ -1,6 +1,14 @@
 import { useState } from "react";
 import api from "../lib/api";
 
+const DEMO_ACCOUNTS = [
+  { label: "HR", username: "hr_acme", company: "Acme Corporation" },
+  { label: "HR", username: "hr_globex", company: "Globex Industries" },
+  { label: "Vendor", username: "vendor_healthplus", company: "HealthPlus Pte Ltd" },
+  { label: "Vendor", username: "vendor_wellcare", company: "WellCare Solutions" },
+  { label: "Vendor", username: "vendor_fitlife", company: "FitLife Wellness" },
+];
+
 export default function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -63,12 +71,34 @@ export default function LoginPage({ onLogin }) {
 
         <div style={styles.demoBox}>
           <p style={styles.demoTitle}>Demo Accounts:</p>
-          <p style={styles.demoText}>
-            <strong>HR:</strong> hr_acme / password123
-          </p>
-          <p style={styles.demoText}>
-            <strong>Vendor:</strong> vendor_healthplus / password123
-          </p>
+          {DEMO_ACCOUNTS.map((account) => (
+            <button
+              key={account.username}
+              type="button"
+              style={styles.demoBtn}
+              onClick={() => {
+                setUsername(account.username);
+                setPassword("password123");
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#e2e8f0";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#fff";
+              }}
+            >
+              <span
+                style={{
+                  ...styles.demoBtnRole,
+                  background: account.label === "HR" ? "#dbeafe" : "#f0fdf4",
+                  color: account.label === "HR" ? "#1d4ed8" : "#15803d",
+                }}
+              >
+                {account.label}
+              </span>
+              {account.company}
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -156,5 +186,27 @@ const styles = {
     color: "#475569",
     margin: "0 0 8px 0",
   },
-  demoText: { fontSize: "12px", color: "#64748b", margin: "4px 0" },
+  demoBtn: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "8px 10px",
+    background: "#fff",
+    border: "1px solid #e2e8f0",
+    borderRadius: "6px",
+    fontSize: "13px",
+    color: "#334155",
+    cursor: "pointer",
+    marginTop: "6px",
+    textAlign: "left",
+    transition: "background 0.15s",
+  },
+  demoBtnRole: {
+    fontSize: "11px",
+    fontWeight: "600",
+    padding: "2px 8px",
+    borderRadius: "4px",
+    flexShrink: 0,
+  },
 };
